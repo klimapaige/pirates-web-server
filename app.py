@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
 from flask import Flask, request, jsonify, send_file, send_from_directory, safe_join, abort
+from flask_cors import CORS
 import youtube_dl
-import os
- 
+import os 
+
 dirpath = os.getcwd()
 
 app = Flask(__name__)
+CORS(app);
 
 @app.route('/')
 def easter_egg():
@@ -14,6 +16,7 @@ def easter_egg():
 @app.route('/ripper',methods=['POST'])
 def ripper_post():
     content = request.json
+    print(request.json)
     url = content['url']
     id = getUrlId(url)
     run_youtube(url,id)
@@ -27,7 +30,7 @@ def ripper_get(id):
 
 def getUrlId(url):
     start = url.index('v=')+2
-    end = url.index('&',start) if url.index('&',start)>=0 else len(url)
+    end = url.index('&',start) if url.find('&',start)>=0 else len(url)
     return url[start:end]
 
 
